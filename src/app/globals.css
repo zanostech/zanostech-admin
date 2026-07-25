@@ -1,0 +1,56 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f6f8f5;
+  --foreground: #13231b;
+  --admin-green: #064e3b;
+  --admin-green-soft: #0f766e;
+  --admin-green-light: #dff3ea;
+  --admin-border: #dfe7e1;
+  --admin-muted: #647067;
+}
+
+* { box-sizing: border-box; }
+html { font-family: Arial, Helvetica, sans-serif; }
+body {
+  margin: 0;
+  background: var(--background);
+  color: var(--foreground);
+}
+button, input, textarea, select { font: inherit; }
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
+
+.admin-sidebar { background: #052e24; }
+.admin-sidebar-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 1.25rem;
+  color: #b9c9c1;
+  border-left: 3px solid transparent;
+  border-radius: 0 8px 8px 0;
+  transition: all 0.15s ease;
+}
+.admin-sidebar-nav-item:hover { color: #fff; background: rgba(255,255,255,0.07); }
+.admin-sidebar-nav-item.active {
+  color: #fff;
+  background: rgba(16, 185, 129, 0.14);
+  border-left-color: #34d399;
+}
+.admin-gradient-btn { background: linear-gradient(135deg, #064e3b 0%, #0f766e 100%); }
+.admin-card {
+  background: #fff;
+  border: 1px solid var(--admin-border);
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(6, 78, 59, 0.08);
+}
+.admin-scrollbar::-webkit-scrollbar { width: 6px; }
+.admin-scrollbar::-webkit-scrollbar-track { background: transparent; }
+.admin-scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.16); border-radius: 3px; }
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
