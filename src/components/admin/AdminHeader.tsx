@@ -7,7 +7,7 @@ import { logoutAdmin } from "@/services/auth/loginAdmin";
 
 export default function AdminHeader({ title }: { title: string }) {
   const router = useRouter();
-  const { adminProfile } = useAdmin();
+  const { adminProfile, isProfileLoading } = useAdmin();
 
   const handleLogout = async () => {
     await logoutAdmin();
@@ -19,8 +19,8 @@ export default function AdminHeader({ title }: { title: string }) {
       <h1 className="text-lg font-bold" style={{ color: "#064e3b" }}>{title}</h1>
       <div className="flex-1" />
       <div className="hidden text-right md:block">
-        <p className="text-sm font-bold text-gray-900">{adminProfile.name}</p>
-        <p className="text-[11px] font-bold uppercase text-gray-400">{adminProfile.role.replace("_", " ")}</p>
+        <p className="text-sm font-bold text-gray-900">{isProfileLoading ? "Loading..." : adminProfile.name}</p>
+        <p className="text-[11px] font-bold uppercase text-gray-400">{isProfileLoading ? "" : adminProfile.role.replaceAll("_", " ")}</p>
       </div>
       <button onClick={handleLogout} className="rounded-lg border border-gray-200 p-2 text-gray-600 hover:bg-gray-50" title="Sign Out">
         <LogOut size={17} />
@@ -28,3 +28,4 @@ export default function AdminHeader({ title }: { title: string }) {
     </header>
   );
 }
+

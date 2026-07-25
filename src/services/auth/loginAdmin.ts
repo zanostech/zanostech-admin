@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use server";
 
-import { baseUrl, deleteCookie, getCookie, setCookie } from "@/lib/serverFetch";
+import type { AdminProfile } from "@/types";
+
+import { baseUrl, deleteCookie, getCookie, setCookie, serverFetch } from "@/lib/serverFetch";
 
 export const loginAdmin = async (payload: { email: string; password: string }) => {
   try {
@@ -47,3 +49,18 @@ export const logoutAdmin = async () => {
   await deleteCookie("refreshToken");
   return { success: true };
 };
+export const getAdminProfile = async () => {
+  try {
+    const res = await serverFetch.get("/auth/me");
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      return { success: false, message: data.message || "Unable to load admin profile", data: null };
+    }
+
+    return { success: true, message: data.message || "Success", data: data.data as AdminProfile };
+  } catch (err: any) {
+    return { success: false, message: err.message || "Unable to load admin profile", data: null };
+  }
+};
+

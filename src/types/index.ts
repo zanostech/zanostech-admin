@@ -10,8 +10,12 @@ export type ApiResponse<T> = {
 };
 
 export type AdminProfile = {
+  id: string;
+  email: string;
   name: string;
-  role: "ADMIN" | "SUPER_ADMIN";
+  role: "USER" | "ADMIN" | "SUPER_ADMIN";
+  status: "ACTIVE" | "SUSPENDED" | "BANNED";
+  createdAt: string;
 };
 
 export type Project = {

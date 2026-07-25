@@ -10,7 +10,7 @@ import { logoutAdmin } from "@/services/auth/loginAdmin";
 export default function AdminSidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { adminProfile } = useAdmin();
+  const { adminProfile, isProfileLoading } = useAdmin();
 
   const isActive = (path: string) => path === "/dashboard" ? pathname === path : pathname.startsWith(path);
 
@@ -50,8 +50,8 @@ export default function AdminSidebar() {
         <div className="flex items-center gap-3">
           <div className="flex h-9 w-9 items-center justify-center rounded-full bg-emerald-400 text-sm font-bold text-emerald-950">A</div>
           <div className="min-w-0 flex-1">
-            <p className="truncate text-sm font-semibold text-white">{adminProfile.name}</p>
-            <p className="text-[11px] font-bold uppercase text-emerald-300">{adminProfile.role.replace("_", " ")}</p>
+            <p className="truncate text-sm font-semibold text-white">{isProfileLoading ? "Loading..." : adminProfile.name}</p>
+            <p className="text-[11px] font-bold uppercase text-emerald-300">{isProfileLoading ? "" : adminProfile.role.replaceAll("_", " ")}</p>
           </div>
           <button onClick={handleLogout} title="Sign Out" className="rounded-lg p-2 text-emerald-100/70 hover:bg-white/10 hover:text-white">
             <LogOut size={16} />
@@ -61,3 +61,4 @@ export default function AdminSidebar() {
     </aside>
   );
 }
+

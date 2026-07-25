@@ -11,8 +11,9 @@
 }
 
 * { box-sizing: border-box; }
-html { font-family: Arial, Helvetica, sans-serif; }
+html { font-family: var(--font-poppins), Arial, Helvetica, sans-serif; }
 body {
+  font-family: var(--font-poppins), Arial, Helvetica, sans-serif;
   margin: 0;
   background: var(--background);
   color: var(--foreground);
@@ -54,3 +55,4 @@ button:disabled { cursor: not-allowed; }
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
+
