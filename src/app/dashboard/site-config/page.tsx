@@ -54,10 +54,6 @@ export default function SiteConfigPage() {
     setSubmitting(false);
   };
 
-  if (loading) {
-    return <div className="p-10 text-center text-gray-500 font-bold">Loading Configuration...</div>;
-  }
-
   const common = "mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-emerald-800";
 
   return (
@@ -70,40 +66,44 @@ export default function SiteConfigPage() {
       </section>
 
       <section className="admin-card p-5 max-w-4xl mx-auto">
-        <form onSubmit={handleSubmit} autoComplete="off" className="grid gap-6">
-          <label className="flex flex-col">
-            <span className="text-sm font-semibold text-gray-700">Company Name</span>
-            <input name="companyName" required value={formData.companyName} onChange={handleChange} className={common} />
-          </label>
-          <label className="flex flex-col">
-            <span className="text-sm font-semibold text-gray-700">Hero Heading</span>
-            <input name="heroHeading" required value={formData.heroHeading} onChange={handleChange} className={common} />
-          </label>
-          <label className="flex flex-col">
-            <span className="text-sm font-semibold text-gray-700">Hero Subheading</span>
-            <textarea name="heroSubheading" required rows={3} value={formData.heroSubheading} onChange={handleChange} className={common} />
-          </label>
-          <label className="flex flex-col">
-            <span className="text-sm font-semibold text-gray-700">Slogan</span>
-            <input name="slogan" required value={formData.slogan} onChange={handleChange} className={common} />
-          </label>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {loading ? (
+          <div className="py-10 text-center text-gray-500 font-bold">Loading Configuration...</div>
+        ) : (
+          <form onSubmit={handleSubmit} autoComplete="off" className="grid gap-6">
             <label className="flex flex-col">
-              <span className="text-sm font-semibold text-gray-700">Contact Email</span>
-              <input type="email" name="contactEmail" required value={formData.contactEmail} onChange={handleChange} className={common} />
+              <span className="text-sm font-semibold text-gray-700">Company Name</span>
+              <input name="companyName" required value={formData.companyName} onChange={handleChange} className={common} />
             </label>
             <label className="flex flex-col">
-              <span className="text-sm font-semibold text-gray-700">Contact Phone</span>
-              <input name="contactPhone" required value={formData.contactPhone} onChange={handleChange} className={common} />
+              <span className="text-sm font-semibold text-gray-700">Hero Heading</span>
+              <input name="heroHeading" required value={formData.heroHeading} onChange={handleChange} className={common} />
             </label>
-          </div>
-          
-          <div className="flex justify-end pt-4 border-t border-gray-100">
-            <button disabled={submitting} type="submit" className="admin-gradient-btn rounded-lg px-6 py-2.5 text-sm font-bold text-white disabled:opacity-60">
-              {submitting ? "Saving..." : "Save Changes"}
-            </button>
-          </div>
-        </form>
+            <label className="flex flex-col">
+              <span className="text-sm font-semibold text-gray-700">Hero Subheading</span>
+              <textarea name="heroSubheading" required rows={3} value={formData.heroSubheading} onChange={handleChange} className={common} />
+            </label>
+            <label className="flex flex-col">
+              <span className="text-sm font-semibold text-gray-700">Slogan</span>
+              <input name="slogan" required value={formData.slogan} onChange={handleChange} className={common} />
+            </label>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <label className="flex flex-col">
+                <span className="text-sm font-semibold text-gray-700">Contact Email</span>
+                <input type="email" name="contactEmail" required value={formData.contactEmail} onChange={handleChange} className={common} />
+              </label>
+              <label className="flex flex-col">
+                <span className="text-sm font-semibold text-gray-700">Contact Phone</span>
+                <input name="contactPhone" required value={formData.contactPhone} onChange={handleChange} className={common} />
+              </label>
+            </div>
+            
+            <div className="flex justify-end pt-4 border-t border-gray-100">
+              <button disabled={submitting} type="submit" className="admin-gradient-btn rounded-lg px-6 py-2.5 text-sm font-bold text-white disabled:opacity-60">
+                {submitting ? "Saving..." : "Save Changes"}
+              </button>
+            </div>
+          </form>
+        )}
       </section>
     </div>
   );
