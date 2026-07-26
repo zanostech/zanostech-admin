@@ -1,29 +1,35 @@
 "use server";
 
-import { listInquiries } from "./inquiryService";
-import { listProjects } from "./projectService";
-import { listReviews } from "./reviewService";
-import { listSiteConfigs } from "./siteConfigService";
-import { listSocialLinks } from "./socialLinkService";
+import { serverFetch } from "@/lib/serverFetch";
+import { parseResponse } from "./serviceUtils";
+import type { Inquiry } from "@/types";
+
+export type DashboardSummaryResponse = {
+  counts: {
+    projects: number;
+    reviews: number;
+    inquiries: number;
+    socialLinks: number;
+  };
+  recentInquiries: Inquiry[];
+};
 
 export const getDashboardSummary = async () => {
-  const [projects, reviews, inquiries, siteConfig, socialLinks] = await Promise.all([
-    listProjects(),
-    listReviews(),
-    listInquiries(),
-    listSiteConfigs(),
-    listSocialLinks()
-  ]);
+  const res = await serverFetch.get("/dashboard/summary");
+  const parsed = await parseResponse<DashboardSummaryResponse>(res);
+  
+  if (!parsed.success || !parsed.data) {
+    return {
+      counts: { projects: 0, reviews: 0, inquiries: 0, socialLinks: 0 },
+      recentInquiries: [],
+      errors: [parsed.message]
+    };
+  }
 
   return {
-    projects: projects.data ?? [],
-    reviews: reviews.data ?? [],
-    inquiries: inquiries.data ?? [],
-    siteConfig: siteConfig.data ?? [],
-    socialLinks: socialLinks.data ?? [],
-    errors: [projects, reviews, inquiries, siteConfig, socialLinks]
-      .filter((item) => !item.success)
-      .map((item) => item.message)
+    counts: parsed.data.counts,
+    recentInquiries: parsed.data.recentInquiries,
+    errors: [] as string[]
   };
 };
 

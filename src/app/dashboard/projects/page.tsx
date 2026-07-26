@@ -19,11 +19,11 @@ export default function ProjectsPage() {
       fields={[
         { name: "title", label: "Title", type: "text", required: true },
         { name: "description", label: "Description", type: "textarea", required: true },
-        { name: "thumbnail", label: "Thumbnail", type: "file", help: "Upload field expected by backend: thumbnail" },
-        { name: "techStack", label: "Tech Stack", type: "text", placeholder: "Next.js, Node.js, PostgreSQL", help: "Separate values with commas." },
-        { name: "caseStudy", label: "Case Study", type: "textarea" },
-        { name: "liveLink", label: "Live Link", type: "text" },
-        { name: "order", label: "Order", type: "number" },
+        { name: "thumbnail", label: "Thumbnail", type: "file", required: true, help: "Upload field expected by backend: thumbnail" },
+        { name: "techStack", label: "Tech Stack", type: "text", required: true, placeholder: "Next.js, Node.js, PostgreSQL", help: "Separate values with commas." },
+        { name: "caseStudy", label: "Case Study", type: "textarea", required: true },
+        { name: "liveLink", label: "Live Link", type: "text", required: true },
+        { name: "order", label: "Order", type: "number", required: true },
         { name: "isFeatured", label: "Featured", type: "checkbox" }
       ]}
     />

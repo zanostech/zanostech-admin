@@ -11,7 +11,6 @@ const cards = [
   { label: "Projects", key: "projects", href: "/dashboard/projects", icon: FolderKanban },
   { label: "Reviews", key: "reviews", href: "/dashboard/reviews", icon: MessageSquareQuote },
   { label: "Inquiries", key: "inquiries", href: "/dashboard/inquiries", icon: Mail },
-  { label: "Site Config", key: "siteConfig", href: "/dashboard/site-config", icon: Settings },
   { label: "Social Links", key: "socialLinks", href: "/dashboard/social-links", icon: Link2 }
 ] as const;
 
@@ -42,7 +41,7 @@ export default function DashboardPage() {
       <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-5">
         {cards.map((card) => {
           const Icon = card.icon;
-          const count = summary ? summary[card.key].length : 0;
+          const count = summary ? summary.counts[card.key] : 0;
           return (
             <Link key={card.key} href={card.href} className="admin-card group p-5 transition hover:-translate-y-0.5 hover:shadow-lg">
               <div className="flex items-center justify-between">
@@ -71,7 +70,7 @@ export default function DashboardPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-100">
-              {(summary?.inquiries ?? []).slice(0, 5).map((inquiry) => (
+              {(summary?.recentInquiries ?? []).map((inquiry) => (
                 <tr key={inquiry.id}>
                   <td className="px-4 py-3 font-semibold text-gray-800">{inquiry.name}</td>
                   <td className="px-4 py-3 text-gray-600">{inquiry.email}</td>
@@ -79,7 +78,7 @@ export default function DashboardPage() {
                   <td className="px-4 py-3"><span className="rounded-full bg-emerald-50 px-2 py-1 text-xs font-bold text-emerald-800">{inquiry.status}</span></td>
                 </tr>
               ))}
-              {!summary?.inquiries?.length && <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-500">No inquiries found.</td></tr>}
+              {!summary?.recentInquiries?.length && <tr><td colSpan={4} className="px-4 py-8 text-center text-gray-500">No inquiries found.</td></tr>}
             </tbody>
           </table>
         </div>

@@ -72,5 +72,5 @@ export type SocialLink = {
   createdAt: string;
 };
 
-export type EntityName = "projects" | "reviews" | "inquiries" | "site-config" | "social-links";
+export type EntityName = "projects" | "reviews" | "inquiries" | "social-links";
 export type EntityRecord = Project | Review | Inquiry | SiteConfig | SocialLink;

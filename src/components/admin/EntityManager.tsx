@@ -2,11 +2,12 @@
 "use client";
 
 import { useEffect, useMemo, useState, useTransition } from "react";
-import { ChevronLeft, ChevronRight, Eye, Pencil, Plus, Search, Trash2, X } from "lucide-react";
+import { ChevronLeft, ChevronRight, Eye, Pencil, Plus, Search, Trash2, X, ChevronDown } from "lucide-react";
+import Swal from 'sweetalert2';
 import { createEntity, deleteEntity, listEntity, updateEntity } from "@/services/dashboard/entityService";
 import type { EntityName, EntityRecord } from "@/types";
 
-type FieldType = "text" | "email" | "number" | "textarea" | "checkbox" | "file" | "select";
+type FieldType = "text" | "email" | "number" | "textarea" | "checkbox" | "file" | "select" | "url";
 
 type FieldConfig = {
   name: string;
@@ -95,12 +96,11 @@ function FormModal({
             <X size={18} />
           </button>
         </div>
-        <form onSubmit={submit} className="grid gap-4 p-5 md:grid-cols-2">
+        <form autoComplete="off" onSubmit={submit} className="grid gap-4 p-5">
           {fields.map((field) => {
             const common = "mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-emerald-800";
-            const isWide = field.type === "textarea" || field.type === "file";
             return (
-              <label key={field.name} className={isWide ? "md:col-span-2" : ""}>
+              <label key={field.name} className="flex flex-col justify-end">
                 <span className="text-sm font-semibold text-gray-700">{field.label}</span>
                 {field.type === "textarea" ? (
                   <textarea
@@ -123,18 +123,21 @@ function FormModal({
                     <span className="text-sm text-gray-600">Enabled</span>
                   </span>
                 ) : field.type === "select" ? (
-                  <select
-                    name={field.name}
-                    required={field.required}
-                    value={values[field.name] ?? ""}
-                    onChange={(event) => setValues((prev) => ({ ...prev, [field.name]: event.target.value }))}
-                    className={common}
-                  >
-                    <option value="">Select {field.label}</option>
-                    {field.options?.map((option) => (
-                      <option key={option.value} value={option.value}>{option.label}</option>
-                    ))}
-                  </select>
+                  <div className="relative w-full">
+                    <select
+                      name={field.name}
+                      required={field.required}
+                      value={values[field.name] ?? ""}
+                      onChange={(event) => setValues((prev) => ({ ...prev, [field.name]: event.target.value }))}
+                      className={`${common} appearance-none pr-10`}
+                    >
+                      <option value="">Select {field.label}</option>
+                      {field.options?.map((option) => (
+                        <option key={option.value} value={option.value}>{option.label}</option>
+                      ))}
+                    </select>
+                    <ChevronDown size={16} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" />
+                  </div>
                 ) : (
                   <input
                     name={field.name}
@@ -150,7 +153,7 @@ function FormModal({
               </label>
             );
           })}
-          <div className="flex justify-end gap-2 border-t border-gray-100 pt-4 md:col-span-2">
+          <div className="flex justify-end gap-2 border-t border-gray-100 pt-4">
             <button type="button" onClick={onClose} className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-bold text-gray-700 hover:bg-gray-50">Cancel</button>
             <button disabled={submitting} className="admin-gradient-btn rounded-lg px-4 py-2 text-sm font-bold text-white disabled:opacity-60">
               {submitting ? "Saving..." : "Save"}
@@ -247,24 +250,45 @@ export default function EntityManager({
 
   const save = (formData: FormData, record?: any) => {
     setMessage("");
+    Swal.fire({ title: 'Saving...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
     startTransition(async () => {
       const result = record ? await updateEntity(entity, record.id, formData) : await createEntity(entity, formData);
-      setMessage(result.message);
       if (result.success) {
+        Swal.fire('Success!', result.message, 'success');
         setCreating(false);
         setEditing(null);
+        setQuery("");
         load();
+      } else {
+        Swal.fire('Error!', result.message, 'error');
       }
     });
   };
 
   const remove = (record: any) => {
-    if (!confirm(`Delete ${record.title || record.clientName || record.platform || record.companyName || record.name || "this item"}?`)) return;
-    setMessage("");
-    startTransition(async () => {
-      const result = await deleteEntity(entity, record.id);
-      setMessage(result.message);
-      if (result.success) load();
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `Delete ${record.title || record.clientName || record.platform || record.companyName || record.name || "this item"}?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#064e3b',
+      cancelButtonColor: '#ef4444',
+      confirmButtonText: 'Yes, delete it!'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        setMessage("");
+        Swal.fire({ title: 'Deleting...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+        startTransition(async () => {
+          const res = await deleteEntity(entity, record.id);
+          if (res.success) {
+            Swal.fire('Deleted!', res.message, 'success');
+            setQuery("");
+            load();
+          } else {
+            Swal.fire('Error!', res.message, 'error');
+          }
+        });
+      }
     });
   };
 
@@ -286,15 +310,20 @@ export default function EntityManager({
           <label className="relative block w-full md:max-w-sm">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
+              name="searchQuery"
+              autoComplete="off"
               value={query}
               onChange={(event) => setQuery(event.target.value)}
               placeholder="Search..."
               className="h-10 w-full rounded-lg border border-gray-200 pl-9 pr-3 text-sm outline-none focus:border-emerald-800"
             />
           </label>
-          <select value={pageSize} onChange={(event) => setPageSize(Number(event.target.value))} className="h-10 rounded-lg border border-gray-200 px-3 text-sm outline-none focus:border-emerald-800">
-            {pageSizeOptions.map((size) => <option key={size} value={size}>{size} / page</option>)}
-          </select>
+          <div className="relative">
+            <select value={pageSize} onChange={(event) => setPageSize(Number(event.target.value))} className="h-10 w-full appearance-none rounded-lg border border-gray-200 pl-3 pr-10 text-sm outline-none focus:border-emerald-800">
+              {pageSizeOptions.map((size) => <option key={size} value={size}>{size} / page</option>)}
+            </select>
+            <ChevronDown size={16} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" />
+          </div>
         </div>
         {message && <div className="mt-4 rounded-lg border border-emerald-100 bg-emerald-50 px-3 py-2 text-sm font-semibold text-emerald-900">{message}</div>}
       </section>
@@ -320,9 +349,9 @@ export default function EntityManager({
                   ))}
                   <td className="px-4 py-3 align-top">
                     <div className="flex justify-end gap-2">
-                      <button onClick={() => setViewing(record)} className="rounded-lg border border-gray-200 p-2 text-emerald-800 hover:bg-emerald-50" title="View details"><Eye size={16} /></button>
-                      {canEdit && <button onClick={() => setEditing(record)} className="rounded-lg border border-gray-200 p-2 text-blue-700 hover:bg-blue-50" title="Edit"><Pencil size={16} /></button>}
-                      {canDelete && <button onClick={() => remove(record)} className="rounded-lg border border-gray-200 p-2 text-red-600 hover:bg-red-50" title="Delete"><Trash2 size={16} /></button>}
+                      <button onClick={() => setViewing(record)} className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 text-emerald-800 hover:bg-emerald-50" title="View details"><Eye size={16} /></button>
+                      {canEdit && <button onClick={() => setEditing(record)} className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 text-blue-700 hover:bg-blue-50" title="Edit"><Pencil size={16} /></button>}
+                      {canDelete && <button onClick={() => remove(record)} className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 text-red-600 hover:bg-red-50" title="Delete"><Trash2 size={16} /></button>}
                     </div>
                   </td>
                 </tr>
@@ -335,9 +364,9 @@ export default function EntityManager({
         <div className="flex items-center justify-between border-t border-gray-100 px-4 py-3 text-sm text-gray-600">
           <span>Showing {paginated.length ? (currentPage - 1) * pageSize + 1 : 0}-{Math.min(currentPage * pageSize, filtered.length)} of {filtered.length}</span>
           <div className="flex items-center gap-2">
-            <button disabled={currentPage <= 1} onClick={() => setPage((prev) => Math.max(1, prev - 1))} className="rounded-lg border border-gray-200 p-2 disabled:opacity-40" title="Previous"><ChevronLeft size={16} /></button>
+            <button disabled={currentPage <= 1} onClick={() => setPage((prev) => Math.max(1, prev - 1))} className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 disabled:opacity-40" title="Previous"><ChevronLeft size={16} /></button>
             <span className="font-bold text-emerald-950">{currentPage} / {totalPages}</span>
-            <button disabled={currentPage >= totalPages} onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))} className="rounded-lg border border-gray-200 p-2 disabled:opacity-40" title="Next"><ChevronRight size={16} /></button>
+            <button disabled={currentPage >= totalPages} onClick={() => setPage((prev) => Math.min(totalPages, prev + 1))} className="inline-flex h-8 w-8 items-center justify-center rounded-lg border border-gray-200 disabled:opacity-40" title="Next"><ChevronRight size={16} /></button>
           </div>
         </div>
       </section>
