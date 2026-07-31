@@ -2,13 +2,18 @@
 
 import { useEffect, useState, useTransition } from "react";
 import Link from "next/link";
-import { FolderKanban, Link2, Mail, MessageSquareQuote, Settings } from "lucide-react";
+import { FolderKanban, Link2, Mail, MessageSquareQuote, FileText, HelpCircle, Users, Briefcase, Building } from "lucide-react";
 import { getDashboardSummary } from "@/services/dashboard/dashboardSummaryService";
 
 type Summary = Awaited<ReturnType<typeof getDashboardSummary>>;
 
 const cards = [
   { label: "Projects", key: "projects", href: "/dashboard/projects", icon: FolderKanban },
+  { label: "Posts", key: "posts", href: "/dashboard/posts", icon: FileText },
+  { label: "FAQs", key: "faqs", href: "/dashboard/faqs", icon: HelpCircle },
+  { label: "Team Members", key: "teamMembers", href: "/dashboard/team-members", icon: Users },
+  { label: "Services", key: "services", href: "/dashboard/services", icon: Briefcase },
+  { label: "Clients", key: "clients", href: "/dashboard/clients", icon: Building },
   { label: "Reviews", key: "reviews", href: "/dashboard/reviews", icon: MessageSquareQuote },
   { label: "Inquiries", key: "inquiries", href: "/dashboard/inquiries", icon: Mail },
   { label: "Social Links", key: "socialLinks", href: "/dashboard/social-links", icon: Link2 }

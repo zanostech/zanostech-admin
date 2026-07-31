@@ -21,12 +21,9 @@ export default function AdminSidebar() {
 
   return (
     <aside className="admin-sidebar admin-scrollbar fixed bottom-0 left-0 top-0 z-40 flex w-[280px] flex-col overflow-y-auto">
-      <Link href="/dashboard" className="flex items-center gap-3 px-5 py-5">
-        <div className="flex h-11 w-11 items-center justify-center rounded-lg bg-emerald-400 text-sm font-black text-emerald-950">ZT</div>
-        <div>
-          <span className="block text-xl font-bold leading-none text-white">ZanosTech</span>
-          <span className="mt-1 block text-sm font-bold text-emerald-300">Admin Portal</span>
-        </div>
+      <Link href="/dashboard" className="flex flex-col items-center justify-center gap-2 px-5 py-6 border-b border-white/5">
+        <img src="/zanostech-logo.png" alt="ZanosTech Logo" className="h-12 w-auto object-contain rounded-xl admin-gradient-btn p-2 shadow-sm" />
+        <span className="block text-xs font-bold text-emerald-300 uppercase tracking-widest mt-1">Admin Portal</span>
       </Link>
 
       <nav className="flex-1 py-2">

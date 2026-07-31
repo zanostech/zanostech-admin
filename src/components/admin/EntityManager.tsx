@@ -52,7 +52,7 @@ const initialForm = (fields: FieldConfig[], record?: any) => {
   fields.forEach((field) => {
     if (field.type === "file") return;
     const current = record?.[field.name];
-    if (field.name === "techStack" && Array.isArray(current)) values[field.name] = current.join(", ");
+    if (Array.isArray(current)) values[field.name] = current.join(", ");
     else if (field.type === "checkbox") values[field.name] = Boolean(current);
     else values[field.name] = current ?? "";
   });

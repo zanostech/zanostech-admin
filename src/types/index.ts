@@ -23,6 +23,7 @@ export type Project = {
   title: string;
   description: string;
   thumbnail?: string | null;
+  projectType?: ("WEB" | "MOBILE" | "CMS" | "CRM" | "UI_UX" | "VIDEO")[];
   techStack: string[];
   caseStudy?: string | null;
   liveLink?: string | null;
@@ -72,5 +73,57 @@ export type SocialLink = {
   createdAt: string;
 };
 
-export type EntityName = "projects" | "reviews" | "inquiries" | "social-links";
-export type EntityRecord = Project | Review | Inquiry | SiteConfig | SocialLink;
+
+export type Post = {
+  id: string;
+  title: string;
+  slug: string;
+  content: string;
+  coverImageUrl?: string | null;
+  author?: string | null;
+  category?: string | null;
+  tags: string[];
+  isPublished: boolean;
+  publishedAt?: string | null;
+  createdAt: string;
+};
+
+export type Faq = {
+  id: string;
+  question: string;
+  answer: string;
+  sortOrder: number;
+  createdAt: string;
+};
+
+export type TeamMember = {
+  id: string;
+  name: string;
+  designation: string;
+  bio?: string | null;
+  photoUrl?: string | null;
+  socialLinks: any;
+  sortOrder: number;
+  createdAt: string;
+};
+
+export type Service = {
+  id: string;
+  title: string;
+  icon?: string | null;
+  price?: string | null;
+  description?: string | null;
+  whatsIncluded: string[];
+  sortOrder: number;
+  createdAt: string;
+};
+
+export type Client = {
+  id: string;
+  name: string;
+  sortOrder: number;
+  createdAt: string;
+};
+
+export type EntityName = "projects" | "reviews" | "inquiries" | "social-links" | "posts" | "faqs" | "team-members" | "services" | "clients";
+export type EntityRecord = Project | Review | Inquiry | SiteConfig | SocialLink | Post | Faq | TeamMember | Service | Client;

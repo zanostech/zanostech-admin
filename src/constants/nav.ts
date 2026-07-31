@@ -1,4 +1,4 @@
-import { FolderKanban, LayoutDashboard, Link2, Mail, MessageSquareQuote, Settings } from "lucide-react";
+import { FolderKanban, LayoutDashboard, Link2, Mail, MessageSquareQuote, Settings, FileText, HelpCircle, Users, Briefcase, Building } from "lucide-react";
 
 export const NAV_SECTIONS = [
   {
@@ -10,7 +10,12 @@ export const NAV_SECTIONS = [
     items: [
       { label: "Projects", href: "/dashboard/projects", icon: FolderKanban },
       { label: "Reviews", href: "/dashboard/reviews", icon: MessageSquareQuote },
-      { label: "Inquiries", href: "/dashboard/inquiries", icon: Mail }
+      { label: "Inquiries", href: "/dashboard/inquiries", icon: Mail },
+      { label: "Posts", href: "/dashboard/posts", icon: FileText },
+      { label: "FAQs", href: "/dashboard/faqs", icon: HelpCircle },
+      { label: "Team Members", href: "/dashboard/team-members", icon: Users },
+      { label: "Services", href: "/dashboard/services", icon: Briefcase },
+      { label: "Clients", href: "/dashboard/clients", icon: Building }
     ]
   },
   {
