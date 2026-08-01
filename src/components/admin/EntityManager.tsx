@@ -35,6 +35,7 @@ type EntityManagerProps = {
   canCreate?: boolean;
   canEdit?: boolean;
   canDelete?: boolean;
+  detailRender?: (record: any) => React.ReactNode;
 };
 
 const pageSizeOptions = [5, 10, 20];
@@ -165,7 +166,7 @@ function FormModal({
   );
 }
 
-function DetailModal({ record, onClose }: { record: any; onClose: () => void }) {
+function DetailModal({ record, onClose, customRender }: { record: any; onClose: () => void; customRender?: (record: any) => React.ReactNode }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-8">
       <div className="max-h-full w-full max-w-3xl overflow-y-auto rounded-lg bg-white shadow-2xl">
@@ -175,18 +176,20 @@ function DetailModal({ record, onClose }: { record: any; onClose: () => void }) 
             <X size={18} />
           </button>
         </div>
-        <div className="grid gap-3 p-5 md:grid-cols-2">
-          {Object.entries(record).map(([key, value]) => (
-            <div key={key} className="rounded-lg border border-gray-100 bg-gray-50 p-3">
-              <p className="text-xs font-bold uppercase text-gray-400">{key}</p>
-              {typeof value === "string" && value.startsWith("http") ? (
-                <a href={value} target="_blank" className="mt-1 block break-words text-sm font-semibold text-emerald-800" rel="noreferrer">{value}</a>
-              ) : (
-                <p className="mt-1 break-words text-sm text-gray-700">{displayValue(value)}</p>
-              )}
-            </div>
-          ))}
-        </div>
+        {customRender ? customRender(record) : (
+          <div className="grid gap-3 p-5 md:grid-cols-2">
+            {Object.entries(record).map(([key, value]) => (
+              <div key={key} className="rounded-lg border border-gray-100 bg-gray-50 p-3">
+                <p className="text-xs font-bold uppercase text-gray-400">{key}</p>
+                {typeof value === "string" && value.startsWith("http") ? (
+                  <a href={value} target="_blank" className="mt-1 block break-words text-sm font-semibold text-emerald-800" rel="noreferrer">{value}</a>
+                ) : (
+                  <p className="mt-1 break-words text-sm text-gray-700">{displayValue(value)}</p>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
@@ -201,7 +204,8 @@ export default function EntityManager({
   searchableKeys,
   canCreate = true,
   canEdit = true,
-  canDelete = true
+  canDelete = true,
+  detailRender
 }: EntityManagerProps) {
   const [records, setRecords] = useState<EntityRecord[]>([]);
   const [query, setQuery] = useState("");
@@ -373,7 +377,7 @@ export default function EntityManager({
 
       {creating && <FormModal title={`Create ${title}`} fields={fields} onClose={() => setCreating(false)} onSubmit={(formData) => save(formData)} submitting={isPending} />}
       {editing && <FormModal title={`Edit ${title}`} fields={fields} record={editing} onClose={() => setEditing(null)} onSubmit={(formData) => save(formData, editing)} submitting={isPending} />}
-      {viewing && <DetailModal record={viewing} onClose={() => setViewing(null)} />}
+      {viewing && <DetailModal record={viewing} onClose={() => setViewing(null)} customRender={detailRender} />}
     </div>
   );
 }

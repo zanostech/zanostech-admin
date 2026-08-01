@@ -32,7 +32,7 @@ export default function LoginPage() {
       <div className="w-full max-w-[420px] bg-white rounded-2xl p-8" style={{ boxShadow: "0 8px 32px rgba(6,78,59,0.12)" }}>
         <div className="text-center mb-6">
           <div className="flex flex-col items-center justify-center gap-3 mb-4">
-            <img src="/zanostech-logo.png" alt="ZanosTech Logo" className="h-[72px] w-auto object-contain rounded-2xl admin-gradient-btn shadow-sm p-2" />
+            <img src="/zanostech-logo.png" alt="ZanosTech Logo" className="h-[48px] w-auto object-contain rounded-2xl admin-gradient-btn shadow-sm p-2" />
             <div className="text-left">
               <span className="block font-bold" style={{ color: "#064E3B", fontSize: "1.5rem" }}>Admin Portal</span>
             </div>
