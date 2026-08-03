@@ -19,7 +19,7 @@ export default function TeamMembersPage() {
         { name: "designation", label: "Designation", type: "text", required: true },
         { name: "bio", label: "Bio", type: "textarea" },
         { name: "photoUrl", label: "Photo", type: "file", required: false },
-        { name: "socialLinks", label: "Social Links (JSON)", type: "textarea", help: "Provide a valid JSON object." },
+        { name: "socialLinks", label: "Social Links", type: "string-array", help: "Add social media URLs one by one." },
         { name: "sortOrder", label: "Order", type: "number", required: true }
       ]}
     />

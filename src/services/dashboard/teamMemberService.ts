@@ -19,7 +19,7 @@ const buildTeamMemberPayload = async (formData: FormData) => {
   // Handle socialLinks JSON string or construct it from separate inputs if needed.
   // For simplicity, assuming the form passes a valid JSON string or we leave it empty.
   const socialLinksStr = formData.get("socialLinks") as string;
-  let socialLinks = {};
+  let socialLinks: string[] = [];
   try {
     if (socialLinksStr) socialLinks = JSON.parse(socialLinksStr);
   } catch (e) {}

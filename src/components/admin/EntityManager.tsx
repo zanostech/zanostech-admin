@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 import { createEntity, deleteEntity, listEntity, updateEntity } from "@/services/dashboard/entityService";
 import type { EntityName, EntityRecord } from "@/types";
 
-type FieldType = "text" | "email" | "number" | "textarea" | "checkbox" | "file" | "select" | "url";
+type FieldType = "text" | "email" | "number" | "textarea" | "checkbox" | "file" | "select" | "url" | "string-array";
 
 type FieldConfig = {
   name: string;
@@ -53,7 +53,8 @@ const initialForm = (fields: FieldConfig[], record?: any) => {
   fields.forEach((field) => {
     if (field.type === "file") return;
     const current = record?.[field.name];
-    if (Array.isArray(current)) values[field.name] = current.join(", ");
+    if (field.type === "string-array") values[field.name] = Array.isArray(current) ? current : [];
+    else if (Array.isArray(current)) values[field.name] = current.join(", ");
     else if (field.type === "checkbox") values[field.name] = Boolean(current);
     else values[field.name] = current ?? "";
   });
@@ -83,6 +84,8 @@ function FormModal({
     fields.forEach((field) => {
       if (field.type === "checkbox") {
         formData.set(field.name, values[field.name] ? "true" : "false");
+      } else if (field.type === "string-array") {
+        formData.set(field.name, JSON.stringify(values[field.name]));
       }
     });
     onSubmit(formData);
@@ -103,7 +106,61 @@ function FormModal({
             return (
               <label key={field.name} className="flex flex-col justify-end">
                 <span className="text-sm font-semibold text-gray-700">{field.label}</span>
-                {field.type === "textarea" ? (
+                {field.type === "string-array" ? (
+                  <div className="mt-1 space-y-2">
+                    <div className="flex gap-2">
+                      <input
+                        id={`${field.name}-input`}
+                        type="text"
+                        placeholder={field.placeholder || "Add item..."}
+                        className={common}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter") {
+                            e.preventDefault();
+                            const val = e.currentTarget.value.trim();
+                            if (val) {
+                              setValues((prev) => ({ ...prev, [field.name]: [...(prev[field.name] || []), val] }));
+                              e.currentTarget.value = "";
+                            }
+                          }
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const input = document.getElementById(`${field.name}-input`) as HTMLInputElement;
+                          const val = input.value.trim();
+                          if (val) {
+                            setValues((prev) => ({ ...prev, [field.name]: [...(prev[field.name] || []), val] }));
+                            input.value = "";
+                          }
+                        }}
+                        className="rounded-lg bg-emerald-100 px-3 py-2 text-sm font-bold text-emerald-800 hover:bg-emerald-200"
+                      >
+                        Add
+                      </button>
+                    </div>
+                    <div className="space-y-1">
+                      {(values[field.name] || []).map((item: string, idx: number) => (
+                        <div key={idx} className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2 text-sm text-gray-700">
+                          <span className="truncate">{item}</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setValues((prev) => ({
+                                ...prev,
+                                [field.name]: prev[field.name].filter((_: any, i: number) => i !== idx),
+                              }));
+                            }}
+                            className="text-red-500 hover:text-red-700"
+                          >
+                            <X size={14} />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ) : field.type === "textarea" ? (
                   <textarea
                     name={field.name}
                     required={field.required}

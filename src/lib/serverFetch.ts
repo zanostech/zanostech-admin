@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 
-export const baseUrl = (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "https://api.zanostech.com/v1").replace(/\/$/, "");
+export const baseUrl = (process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || "http://localhost:9001/v1").replace(/\/$/, "");
 
 export const getCookie = async (name: string): Promise<string | undefined> => {
   const cookieStore = await cookies();
