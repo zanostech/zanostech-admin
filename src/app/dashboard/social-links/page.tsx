@@ -20,7 +20,7 @@ export default function SocialLinksPage() {
       fields={[
         { name: "platform", label: "Platform", type: "select", required: true, options: platforms },
         { name: "url", label: "URL", type: "url", required: true },
-        { name: "isActive", label: "Active", type: "checkbox" }
+        { name: "isActive", label: "Active (optional)", type: "checkbox", required: false }
       ]}
     />
   );

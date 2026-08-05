@@ -54,7 +54,7 @@ export default function SiteConfigPage() {
     setSubmitting(false);
   };
 
-  const common = "mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-emerald-800";
+  const common = "mt-1.5 w-full rounded-lg border border-gray-200 bg-gray-50/50 px-3 py-2.5 text-sm text-gray-800 outline-none transition-all focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/20";
 
   return (
     <div className="space-y-5">
@@ -71,29 +71,29 @@ export default function SiteConfigPage() {
         ) : (
           <form onSubmit={handleSubmit} autoComplete="off" className="grid gap-6">
             <label className="flex flex-col">
-              <span className="text-sm font-semibold text-gray-700">Company Name</span>
-              <input name="companyName" required value={formData.companyName} onChange={handleChange} className={common} />
+              <span className="text-sm font-semibold text-gray-700">Company Name (optional)</span>
+              <input name="companyName" value={formData.companyName} onChange={handleChange} className={common} />
             </label>
             <label className="flex flex-col">
-              <span className="text-sm font-semibold text-gray-700">Hero Heading</span>
-              <input name="heroHeading" required value={formData.heroHeading} onChange={handleChange} className={common} />
+              <span className="text-sm font-semibold text-gray-700">Hero Heading (optional)</span>
+              <input name="heroHeading" value={formData.heroHeading} onChange={handleChange} className={common} />
             </label>
             <label className="flex flex-col">
-              <span className="text-sm font-semibold text-gray-700">Hero Subheading</span>
-              <textarea name="heroSubheading" required rows={3} value={formData.heroSubheading} onChange={handleChange} className={common} />
+              <span className="text-sm font-semibold text-gray-700">Hero Subheading (optional)</span>
+              <textarea name="heroSubheading" rows={3} value={formData.heroSubheading} onChange={handleChange} className={common} />
             </label>
             <label className="flex flex-col">
-              <span className="text-sm font-semibold text-gray-700">Slogan</span>
-              <input name="slogan" required value={formData.slogan} onChange={handleChange} className={common} />
+              <span className="text-sm font-semibold text-gray-700">Slogan (optional)</span>
+              <input name="slogan" value={formData.slogan} onChange={handleChange} className={common} />
             </label>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <label className="flex flex-col">
-                <span className="text-sm font-semibold text-gray-700">Contact Email</span>
-                <input type="email" name="contactEmail" required value={formData.contactEmail} onChange={handleChange} className={common} />
+                <span className="text-sm font-semibold text-gray-700">Contact Email (optional)</span>
+                <input type="email" name="contactEmail" value={formData.contactEmail} onChange={handleChange} className={common} />
               </label>
               <label className="flex flex-col">
-                <span className="text-sm font-semibold text-gray-700">Contact Phone</span>
-                <input name="contactPhone" required value={formData.contactPhone} onChange={handleChange} className={common} />
+                <span className="text-sm font-semibold text-gray-700">Contact Phone (optional)</span>
+                <input name="contactPhone" value={formData.contactPhone} onChange={handleChange} className={common} />
               </label>
             </div>
             

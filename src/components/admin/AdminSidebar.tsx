@@ -6,6 +6,7 @@ import { LogOut } from "lucide-react";
 import { NAV_SECTIONS } from "@/constants/nav";
 import { useAdmin } from "@/context/AdminContext";
 import { logoutAdmin } from "@/services/auth/loginAdmin";
+import toast from "react-hot-toast";
 
 export default function AdminSidebar() {
   const pathname = usePathname();
@@ -16,6 +17,7 @@ export default function AdminSidebar() {
 
   const handleLogout = async () => {
     await logoutAdmin();
+    toast.success("Logged out successfully");
     router.push("/login");
   };
 

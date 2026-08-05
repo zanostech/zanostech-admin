@@ -27,6 +27,8 @@ export type Project = {
   techStack: string[];
   caseStudy?: string | null;
   liveLink?: string | null;
+  appStoreLink?: string | null;
+  playStoreLink?: string | null;
   isFeatured: boolean;
   order: number;
   createdAt: string;
@@ -103,6 +105,7 @@ export type TeamMember = {
   bio?: string | null;
   photoUrl?: string | null;
   socialLinks: any;
+  portfolioLink?: string | null;
   sortOrder: number;
   createdAt: string;
 };

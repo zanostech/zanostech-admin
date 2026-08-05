@@ -28,6 +28,7 @@ const buildTeamMemberPayload = async (formData: FormData) => {
     name: nullableString(formData.get("name")),
     designation: nullableString(formData.get("designation")),
     bio: nullableString(formData.get("bio")),
+    portfolioLink: nullableString(formData.get("portfolioLink")),
     socialLinks,
     sortOrder: numberValue(formData.get("sortOrder")) ?? 0
   };

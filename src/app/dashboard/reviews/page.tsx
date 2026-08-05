@@ -19,11 +19,12 @@ export default function ReviewsPage() {
       fields={[
         { name: "clientName", label: "Client Name", type: "text", required: true },
         { name: "designation", label: "Designation", type: "text", required: true },
-        { name: "company", label: "Company", type: "text" },
-        { name: "avatar", label: "Avatar", type: "file", help: "Upload field expected by backend: avatar" },
+        { name: "company", label: "Company (optional)", type: "text", required: false },
+        { name: "avatar", label: "Avatar (optional)", type: "file", required: false, help: "Upload field expected by backend: avatar" },
         { name: "reviewText", label: "Review Text", type: "textarea", required: true },
-        { name: "rating", label: "Rating", type: "number" },
-        { name: "isFeatured", label: "Featured", type: "checkbox" }
+        { name: "rating", label: "Rating (optional)", type: "number", required: false },
+        { name: "isFeatured", label: "Featured (optional)", type: "checkbox", required: false },
+        { name: "order", label: "Order (optional)", type: "number", required: false }
       ]}
     />
   );

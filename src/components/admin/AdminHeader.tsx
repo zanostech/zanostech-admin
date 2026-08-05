@@ -4,6 +4,7 @@ import { LogOut } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAdmin } from "@/context/AdminContext";
 import { logoutAdmin } from "@/services/auth/loginAdmin";
+import toast from "react-hot-toast";
 
 export default function AdminHeader({ title }: { title: string }) {
   const router = useRouter();
@@ -11,6 +12,7 @@ export default function AdminHeader({ title }: { title: string }) {
 
   const handleLogout = async () => {
     await logoutAdmin();
+    toast.success("Logged out successfully");
     router.push("/login");
   };
 

@@ -2,7 +2,7 @@
 "use client";
 
 import { useEffect, useMemo, useState, useTransition } from "react";
-import { ChevronLeft, ChevronRight, Eye, Pencil, Plus, Search, Trash2, X, ChevronDown } from "lucide-react";
+import { ChevronLeft, ChevronRight, Eye, Pencil, Plus, Search, Trash2, X, ChevronDown, UploadCloud, ExternalLink } from "lucide-react";
 import Swal from 'sweetalert2';
 import { createEntity, deleteEntity, listEntity, updateEntity } from "@/services/dashboard/entityService";
 import type { EntityName, EntityRecord } from "@/types";
@@ -77,6 +77,15 @@ function FormModal({
   submitting: boolean;
 }) {
   const [values, setValues] = useState<Record<string, any>>(() => initialForm(fields, record));
+  const [previews, setPreviews] = useState<Record<string, string>>(() => {
+    const initPreviews: Record<string, string> = {};
+    fields.forEach(f => {
+      if (f.type === "file" && record && record[f.name]) {
+        initPreviews[f.name] = record[f.name];
+      }
+    });
+    return initPreviews;
+  });
 
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -92,22 +101,22 @@ function FormModal({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-8">
-      <div className="max-h-full w-full max-w-2xl overflow-y-auto rounded-lg bg-white shadow-2xl">
-        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-8 backdrop-blur-sm">
+      <div className="max-h-full w-full max-w-2xl overflow-y-auto rounded-xl bg-white shadow-2xl ring-1 ring-black/5">
+        <div className="flex items-center justify-between border-b border-gray-100 bg-gray-50/50 px-6 py-4">
           <h3 className="text-lg font-bold text-emerald-950">{title}</h3>
-          <button onClick={onClose} className="rounded-lg p-2 text-gray-500 hover:bg-gray-100" type="button" title="Close">
+          <button onClick={onClose} className="rounded-lg p-2 text-gray-500 hover:bg-gray-200 transition-colors" type="button" title="Close">
             <X size={18} />
           </button>
         </div>
-        <form autoComplete="off" onSubmit={submit} className="grid gap-4 p-5">
+        <form autoComplete="off" onSubmit={submit} className="grid gap-5 p-6">
           {fields.map((field) => {
-            const common = "mt-1 w-full rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-emerald-800";
+            const common = "mt-1.5 w-full rounded-lg border border-gray-200 bg-gray-50/50 px-3 py-2.5 text-sm text-gray-800 outline-none transition-all focus:border-emerald-500 focus:bg-white focus:ring-2 focus:ring-emerald-500/20";
             return (
               <label key={field.name} className="flex flex-col justify-end">
                 <span className="text-sm font-semibold text-gray-700">{field.label}</span>
                 {field.type === "string-array" ? (
-                  <div className="mt-1 space-y-2">
+                  <div className="mt-1.5 space-y-2">
                     <div className="flex gap-2">
                       <input
                         id={`${field.name}-input`}
@@ -135,15 +144,15 @@ function FormModal({
                             input.value = "";
                           }
                         }}
-                        className="rounded-lg bg-emerald-100 px-3 py-2 text-sm font-bold text-emerald-800 hover:bg-emerald-200"
+                        className="mt-1.5 rounded-lg bg-emerald-100 px-4 py-2.5 text-sm font-bold text-emerald-800 transition-colors hover:bg-emerald-200"
                       >
                         Add
                       </button>
                     </div>
-                    <div className="space-y-1">
+                    <div className="space-y-1.5">
                       {(values[field.name] || []).map((item: string, idx: number) => (
-                        <div key={idx} className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2 text-sm text-gray-700">
-                          <span className="truncate">{item}</span>
+                        <div key={idx} className="flex items-center justify-between rounded-lg bg-gray-50 px-3 py-2 text-sm text-gray-700 border border-gray-100">
+                          <span className="truncate font-medium">{item}</span>
                           <button
                             type="button"
                             onClick={() => {
@@ -152,7 +161,7 @@ function FormModal({
                                 [field.name]: prev[field.name].filter((_: any, i: number) => i !== idx),
                               }));
                             }}
-                            className="text-red-500 hover:text-red-700"
+                            className="text-red-500 hover:text-red-700 p-1 hover:bg-red-50 rounded"
                           >
                             <X size={14} />
                           </button>
@@ -171,14 +180,15 @@ function FormModal({
                     className={common}
                   />
                 ) : field.type === "checkbox" ? (
-                  <span className="mt-2 flex h-10 items-center gap-2 rounded-lg border border-gray-200 px-3">
+                  <span className="mt-1.5 flex h-11 items-center gap-2.5 rounded-lg border border-gray-200 bg-gray-50/50 px-3 transition-colors hover:bg-gray-100/50">
                     <input
                       name={field.name}
                       type="checkbox"
+                      className="h-4 w-4 rounded border-gray-300 text-emerald-600 focus:ring-emerald-500"
                       checked={Boolean(values[field.name])}
                       onChange={(event) => setValues((prev) => ({ ...prev, [field.name]: event.target.checked }))}
                     />
-                    <span className="text-sm text-gray-600">Enabled</span>
+                    <span className="text-sm font-medium text-gray-700">Enabled</span>
                   </span>
                 ) : field.type === "select" ? (
                   <div className="relative w-full">
@@ -196,13 +206,44 @@ function FormModal({
                     </select>
                     <ChevronDown size={16} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-gray-500" />
                   </div>
+                ) : field.type === "file" ? (
+                  <div className="group relative mt-1.5 flex justify-center rounded-xl border-2 border-dashed border-gray-300 bg-gray-50/50 px-6 py-8 transition-all hover:border-emerald-500 hover:bg-emerald-50/30">
+                    <div className="text-center">
+                      {previews[field.name] ? (
+                        <img src={previews[field.name]} alt="Preview" className="mx-auto h-24 w-24 object-cover rounded-lg shadow-sm mb-3 group-hover:opacity-60 transition-opacity" />
+                      ) : (
+                        <UploadCloud className="mx-auto h-10 w-10 text-gray-400 group-hover:text-emerald-500 transition-colors" />
+                      )}
+                      <div className="mt-3 flex text-sm leading-6 text-gray-600 justify-center">
+                        <span className="relative cursor-pointer rounded-md bg-transparent font-bold text-emerald-600 focus-within:outline-none hover:text-emerald-500">
+                          <span>Upload a file</span>
+                          <input
+                            id={`file-${field.name}`}
+                            name={field.name}
+                            type="file"
+                            className="absolute inset-0 h-full w-full opacity-0 cursor-pointer"
+                            required={field.required && !record}
+                            onChange={(e) => {
+                              const file = e.target.files?.[0];
+                              if (file) {
+                                const url = URL.createObjectURL(file);
+                                setPreviews((prev) => ({ ...prev, [field.name]: url }));
+                              }
+                            }}
+                          />
+                        </span>
+                        <p className="pl-1">or drag and drop</p>
+                      </div>
+                      <p className="text-xs leading-5 text-gray-500">PNG, JPG, WEBP up to 5MB</p>
+                    </div>
+                  </div>
                 ) : (
                   <input
                     name={field.name}
                     type={field.type}
                     required={field.required && !record}
-                    value={field.type === "file" ? undefined : values[field.name] ?? ""}
-                    onChange={field.type === "file" ? undefined : (event) => setValues((prev) => ({ ...prev, [field.name]: event.target.value }))}
+                    value={values[field.name] ?? ""}
+                    onChange={(event) => setValues((prev) => ({ ...prev, [field.name]: event.target.value }))}
                     placeholder={field.placeholder}
                     className={common}
                   />
@@ -211,10 +252,10 @@ function FormModal({
               </label>
             );
           })}
-          <div className="flex justify-end gap-2 border-t border-gray-100 pt-4">
-            <button type="button" onClick={onClose} className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-bold text-gray-700 hover:bg-gray-50">Cancel</button>
-            <button disabled={submitting} className="admin-gradient-btn rounded-lg px-4 py-2 text-sm font-bold text-white disabled:opacity-60">
-              {submitting ? "Saving..." : "Save"}
+          <div className="mt-2 flex justify-end gap-3 border-t border-gray-100 pt-5">
+            <button type="button" onClick={onClose} className="rounded-lg border border-gray-200 bg-white px-5 py-2.5 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-50 hover:text-gray-900">Cancel</button>
+            <button disabled={submitting} className="admin-gradient-btn rounded-lg px-5 py-2.5 text-sm font-bold text-white transition-opacity disabled:opacity-60 shadow-md">
+              {submitting ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </form>
@@ -223,30 +264,77 @@ function FormModal({
   );
 }
 
+const isImageUrl = (url: any) => typeof url === "string" && (url.match(/\.(jpeg|jpg|gif|png|webp|svg)$/i) !== null || url.includes("cloudinary.com"));
+
+const formatKey = (key: string) => {
+  const result = key.replace(/([A-Z])/g, ' $1').trim();
+  return result.charAt(0).toUpperCase() + result.slice(1);
+};
+
 function DetailModal({ record, onClose, customRender }: { record: any; onClose: () => void; customRender?: (record: any) => React.ReactNode }) {
+  const imageEntries = Object.entries(record).filter(([_, value]) => isImageUrl(value));
+  const otherEntries = Object.entries(record).filter(([key, value]) => !isImageUrl(value) && key !== "id" && key !== "createdAt" && key !== "updatedAt");
+  const metaEntries = Object.entries(record).filter(([key]) => key === "id" || key === "createdAt" || key === "updatedAt");
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4 py-8">
-      <div className="max-h-full w-full max-w-3xl overflow-y-auto rounded-lg bg-white shadow-2xl">
-        <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
-          <h3 className="text-lg font-bold text-emerald-950">Details</h3>
-          <button onClick={onClose} className="rounded-lg p-2 text-gray-500 hover:bg-gray-100" type="button" title="Close">
-            <X size={18} />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 px-4 py-8 backdrop-blur-sm">
+      <div className="max-h-full w-full max-w-3xl overflow-y-auto rounded-xl bg-white shadow-2xl ring-1 ring-black/5">
+        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-gray-100 bg-white/90 px-6 py-4 backdrop-blur-md">
+          <h3 className="text-xl font-bold text-emerald-950">Record Details</h3>
+          <button onClick={onClose} className="rounded-lg p-2 text-gray-500 hover:bg-gray-100 transition-colors" type="button" title="Close">
+            <X size={20} />
           </button>
         </div>
-        {customRender ? customRender(record) : (
-          <div className="grid gap-3 p-5 md:grid-cols-2">
-            {Object.entries(record).map(([key, value]) => (
-              <div key={key} className="rounded-lg border border-gray-100 bg-gray-50 p-3">
-                <p className="text-xs font-bold uppercase text-gray-400">{key}</p>
-                {typeof value === "string" && value.startsWith("http") ? (
-                  <a href={value} target="_blank" className="mt-1 block break-words text-sm font-semibold text-emerald-800" rel="noreferrer">{value}</a>
-                ) : (
-                  <p className="mt-1 break-words text-sm text-gray-700">{displayValue(value)}</p>
-                )}
+        
+        <div className="p-6">
+          {customRender ? customRender(record) : (
+            <div className="space-y-6">
+              {imageEntries.length > 0 && (
+                <div className="grid gap-4 md:grid-cols-2">
+                  {imageEntries.map(([key, value]) => (
+                    <div key={key} className="overflow-hidden rounded-xl border border-gray-100 bg-gray-50/50 p-3">
+                      <p className="mb-3 text-xs font-bold text-gray-500 uppercase tracking-wider">{formatKey(key)}</p>
+                      <img src={value as string} alt={key} className="h-48 w-full rounded-lg object-cover shadow-sm" />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="grid gap-4 md:grid-cols-2">
+                {otherEntries.map(([key, value]) => {
+                  if (value === null || value === undefined || value === "") return null;
+                  
+                  return (
+                    <div key={key} className="rounded-xl border border-gray-100 bg-gray-50/50 p-4 transition-colors hover:bg-emerald-50/30">
+                      <p className="text-xs font-bold text-gray-500 uppercase tracking-wider">{formatKey(key)}</p>
+                      {typeof value === "string" && value.startsWith("http") ? (
+                        <a href={value} target="_blank" className="mt-2 inline-flex items-center gap-2 rounded-lg bg-emerald-100/50 px-3 py-1.5 text-sm font-bold text-emerald-700 transition-colors hover:bg-emerald-200" rel="noreferrer">
+                          <ExternalLink size={14} />
+                          Visit Link
+                        </a>
+                      ) : (
+                        <div className="mt-1.5 text-sm font-semibold text-gray-800 break-words whitespace-pre-wrap">
+                          {displayValue(value)}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
-            ))}
-          </div>
-        )}
+
+              {metaEntries.length > 0 && (
+                <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3 rounded-xl border border-gray-100 bg-gray-50 px-5 py-4 text-sm">
+                  {metaEntries.map(([key, value]) => (
+                    <div key={key} className="flex items-center gap-2">
+                      <span className="text-gray-500 font-semibold">{formatKey(key)}:</span>
+                      <span className="text-gray-700 font-mono text-xs bg-white px-2 py-1 rounded border border-gray-200 shadow-sm">{key.includes("At") && value ? new Date(value as string).toLocaleString() : String(value)}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ export default function ClientsPage() {
       ]}
       fields={[
         { name: "name", label: "Name", type: "text", required: true },
-        { name: "sortOrder", label: "Order", type: "number", required: true }
+        { name: "sortOrder", label: "Order (optional)", type: "number", required: false }
       ]}
     />
   );

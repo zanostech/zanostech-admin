@@ -20,13 +20,13 @@ export default function ProjectsPage() {
       fields={[
         { name: "title", label: "Title", type: "text", required: true },
         { name: "description", label: "Description", type: "textarea", required: true },
-        { name: "thumbnail", label: "Thumbnail", type: "file", required: false, help: "Upload field expected by backend: thumbnail" },
-        { name: "techStack", label: "Tech Stack", type: "text", required: true, placeholder: "Next.js, Node.js, PostgreSQL", help: "Separate values with commas." },
+        { name: "thumbnail", label: "Thumbnail (optional)", type: "file", required: false, help: "Upload field expected by backend: thumbnail" },
+        { name: "techStack", label: "Tech Stack (optional)", type: "string-array", required: false },
         { 
           name: "projectType", 
-          label: "Project Type", 
+          label: "Project Type (optional)", 
           type: "select", 
-          required: true, 
+          required: false, 
           options: [
             { label: "Web Application", value: "WEB" },
             { label: "Mobile Application", value: "MOBILE" },
@@ -36,10 +36,12 @@ export default function ProjectsPage() {
             { label: "Video Editing", value: "VIDEO" },
           ] 
         },
-        { name: "caseStudy", label: "Case Study", type: "textarea", required: true },
-        { name: "liveLink", label: "Live Link", type: "text", required: true },
-        { name: "order", label: "Order", type: "number", required: true },
-        { name: "isFeatured", label: "Featured", type: "checkbox" }
+        { name: "caseStudy", label: "Case Study (optional)", type: "textarea", required: false },
+        { name: "liveLink", label: "Live Link (optional)", type: "text", required: false },
+        { name: "appStoreLink", label: "App Store Link (optional)", type: "text", required: false },
+        { name: "playStoreLink", label: "Play Store Link (optional)", type: "text", required: false },
+        { name: "order", label: "Order (optional)", type: "number", required: false },
+        { name: "isFeatured", label: "Featured (optional)", type: "checkbox", required: false }
       ]}
     />
   );

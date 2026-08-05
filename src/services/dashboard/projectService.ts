@@ -16,19 +16,26 @@ const buildProjectPayload = async (formData: FormData) => {
     }
   }
 
+  const techStackStr = formData.get("techStack") as string;
+  let techStack: string[] = [];
+  try {
+    if (techStackStr) techStack = JSON.parse(techStackStr);
+  } catch (e) {
+    techStack = String(techStackStr || "").split(",").map((i) => i.trim()).filter(Boolean);
+  }
+
   const payload: any = {
     title: nullableString(formData.get("title")),
     description: nullableString(formData.get("description")),
-    techStack: String(formData.get("techStack") ?? "")
-      .split(",")
-      .map((item) => item.trim())
-      .filter(Boolean),
+    techStack,
     projectType: String(formData.get("projectType") ?? "")
       .split(",")
       .map((item) => item.trim().toUpperCase())
       .filter(Boolean),
     caseStudy: nullableString(formData.get("caseStudy")),
     liveLink: nullableString(formData.get("liveLink")),
+    appStoreLink: nullableString(formData.get("appStoreLink")),
+    playStoreLink: nullableString(formData.get("playStoreLink")),
     isFeatured: boolValue(formData.get("isFeatured")),
     order: numberValue(formData.get("order")) ?? 0
   };

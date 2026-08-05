@@ -16,7 +16,7 @@ export default function FaqsPage() {
       fields={[
         { name: "question", label: "Question", type: "text", required: true },
         { name: "answer", label: "Answer", type: "textarea", required: true },
-        { name: "sortOrder", label: "Order", type: "number", required: true }
+        { name: "sortOrder", label: "Order (optional)", type: "number", required: false }
       ]}
     />
   );

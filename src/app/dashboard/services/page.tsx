@@ -16,11 +16,11 @@ export default function ServicesPage() {
       ]}
       fields={[
         { name: "title", label: "Title", type: "text", required: true },
-        { name: "icon", label: "Icon Name", type: "text", help: "E.g., lucide-react icon name or URL." },
-        { name: "price", label: "Price", type: "text" },
-        { name: "description", label: "Description", type: "textarea" },
-        { name: "whatsIncluded", label: "What is Included", type: "textarea", help: "Separate items with commas." },
-        { name: "sortOrder", label: "Order", type: "number", required: true }
+        { name: "icon", label: "Icon (optional)", type: "file", required: false, help: "Upload field expected by backend: icon" },
+        { name: "price", label: "Price (optional)", type: "text", required: false },
+        { name: "description", label: "Description (optional)", type: "textarea", required: false },
+        { name: "whatsIncluded", label: "What is Included (optional)", type: "string-array", required: false },
+        { name: "sortOrder", label: "Order (optional)", type: "number", required: false }
       ]}
     />
   );

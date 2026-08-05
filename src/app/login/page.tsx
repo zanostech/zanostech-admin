@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { loginAdmin } from "@/services/auth/loginAdmin";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -19,11 +20,14 @@ export default function LoginPage() {
     const result = await loginAdmin({ email, password });
 
     if (!result.success) {
-      setError(result.message || "Invalid email or password.");
+      const errorMsg = result.message || "Invalid email or password.";
+      setError(errorMsg);
+      toast.error(errorMsg);
       setLoading(false);
       return;
     }
 
+    toast.success("Welcome back!");
     router.push("/dashboard");
   };
 

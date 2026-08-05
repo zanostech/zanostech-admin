@@ -8,7 +8,7 @@ export default function PostsPage() {
       entity="posts"
       title="Posts"
       description="Manage blog posts, content, and publishing status."
-      searchableKeys={["title", "slug", "content", "author", "category", "tags"]}
+      searchableKeys={["title", "content", "author", "category", "tags"]}
       columns={[
         { key: "title", label: "Title" },
         { key: "category", label: "Category" },
@@ -17,13 +17,13 @@ export default function PostsPage() {
       ]}
       fields={[
         { name: "title", label: "Title", type: "text", required: true },
-        { name: "slug", label: "Slug", type: "text", required: true },
         { name: "content", label: "Content", type: "textarea", required: true },
-        { name: "coverImageUrl", label: "Cover Image", type: "file", required: false },
-        { name: "author", label: "Author", type: "text" },
-        { name: "category", label: "Category", type: "text" },
-        { name: "tags", label: "Tags", type: "text", placeholder: "tech, business", help: "Separate with commas." },
-        { name: "isPublished", label: "Published", type: "checkbox" }
+        { name: "coverImageUrl", label: "Cover Image (optional)", type: "file", required: false },
+        { name: "link", label: "Link (optional)", type: "url", required: false },
+        { name: "author", label: "Author (optional)", type: "text", required: false },
+        { name: "category", label: "Category (optional)", type: "text", required: false },
+        { name: "tags", label: "Tags (optional)", type: "string-array", required: false },
+        { name: "isPublished", label: "Published (optional)", type: "checkbox", required: false }
       ]}
     />
   );
